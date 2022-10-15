@@ -1,20 +1,11 @@
 import { v4 as uuid } from 'uuid';
 
-export const customers = [
+export const rawMaterials = [
   {
     id: uuid(),
-    address: {
-      country: 'Malaysia',
-      state: 'Sarawak',
-      city: 'Kuching',
-      street: 'Lorong Tiya Vista'
-    },
-    avatarUrl: '/static/images/avatars/avatar_3.png',
-    createdAt: 1555016400000,
-    email: 'ekaterina.tankova@devias.io',
-    company: 'Emart Matang',
-    name: 'Ekaterina Tankova',
-    phone: '304-428-3097'
+    name: 'Bawang Merah',
+    quantity: '120',
+    unit: 'KG'
   },
   {
     id: uuid(),

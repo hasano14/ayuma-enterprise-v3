@@ -1,15 +1,15 @@
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { CustomerListResults } from '../components/customer/customer-list-results';
-import { CustomerListToolbar } from '../components/customer/customer-list-toolbar';
+import { InvoiceListResults } from '../components/invoice/invoice-list-results';
+import { InvoiceListToolbar } from '../components/invoice/invoice-list-toolbar';
 import { DashboardLayout } from '../components/dashboard-layout';
-import { customers } from '../__mocks__/customers';
+import { invoices } from '../__mocks__/invoices';
 
 const Page = () => (
   <>
     <Head>
       <title>
-        Customers | Ayuma Admin 
+        Invoices | Ayuma Admin 
       </title>
     </Head>
     <Box
@@ -20,9 +20,9 @@ const Page = () => (
       }}
     >
       <Container maxWidth={false}>
-        <CustomerListToolbar />
+        <InvoiceListToolbar />
         <Box sx={{ mt: 3 }}>
-          <CustomerListResults customers={customers} />
+          <InvoiceListResults invoices={invoices} />
         </Box>
       </Container>
     </Box>

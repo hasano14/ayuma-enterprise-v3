@@ -12,7 +12,7 @@ import { Search as SearchIcon } from "../../icons/search";
 import { Upload as UploadIcon } from "../../icons/upload";
 import { Download as DownloadIcon } from "../../icons/download";
 
-export const CustomerListToolbar = (props) => (
+export const InvoiceListToolbar = (props) => (
   <Box {...props}>
     <Box
       sx={{
@@ -24,7 +24,7 @@ export const CustomerListToolbar = (props) => (
       }}
     >
       <Typography sx={{ m: 1 }} variant="h4">
-        Customers
+        Invoices
       </Typography>
       <Box sx={{ m: 1 }}>
         <Button startIcon={<UploadIcon fontSize="small" />} sx={{ mr: 1 }}>
@@ -34,7 +34,7 @@ export const CustomerListToolbar = (props) => (
           Export
         </Button>
         <Button color="primary" variant="contained">
-          Add Customers
+          Add Invoice
         </Button>
       </Box>
     </Box>
@@ -53,7 +53,7 @@ export const CustomerListToolbar = (props) => (
                   </InputAdornment>
                 ),
               }}
-              placeholder="Search customer"
+              placeholder="Search invoice"
               variant="outlined"
             />
           </Box>

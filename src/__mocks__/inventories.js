@@ -1,13 +1,13 @@
 import { v4 as uuid } from 'uuid';
 
-export const customers = [
+export const inventories = [
   {
     id: uuid(),
     address: {
-      country: 'Malaysia',
-      state: 'Sarawak',
-      city: 'Kuching',
-      street: 'Lorong Tiya Vista'
+      country: 'USA',
+      state: 'West Virginia',
+      city: 'Parkersburg',
+      street: '2849 Fulton Street'
     },
     avatarUrl: '/static/images/avatars/avatar_3.png',
     createdAt: 1555016400000,
