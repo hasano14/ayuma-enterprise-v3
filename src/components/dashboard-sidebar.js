@@ -40,11 +40,6 @@ const items = [
     title: "Inventory",
   },
   {
-    href: "/products",
-    icon: <ShoppingBagIcon fontSize="small" />,
-    title: "Products",
-  },
-  {
     href: "/account",
     icon: <UserIcon fontSize="small" />,
     title: "Account",

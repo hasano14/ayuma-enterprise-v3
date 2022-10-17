@@ -69,7 +69,7 @@ export const InvoiceListResults = ({ invoices, ...rest }) => {
   return (
     <Card {...rest}>
       <PerfectScrollbar>
-        <Box sx={{ minWidth: 1050 }}>
+        <Box sx={{ overflow: 'auto' }}>
           <Table>
             <TableHead>
               <TableRow>

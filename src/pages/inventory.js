@@ -26,7 +26,7 @@ const Page = () => (
               <InventoryListResults inventories={rawMaterials} title="Raw Materials" />
             </Grid>
             <Grid item xl={6} lg={6} sm={6} xs={12}>
-              <InventoryListResults inventories={packagings} title="Packagings"/>
+              <InventoryListResults inventories={packagings} title="Packagings" />
             </Grid>
           </Grid>
         </Box>

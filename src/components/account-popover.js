@@ -67,7 +67,8 @@ export const AccountPopover = (props) => {
       <Box
         sx={{
           py: 1.5,
-          px: 2
+          px: 2,
+          width: 'auto'
         }}
       >
         <Typography variant="overline">

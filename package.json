@@ -1,5 +1,5 @@
 {
-  "name": "material-kit-react",
+  "name": "ayuma-enterprise-v3",
   "author": "Devias IO",
   "licence": "MIT",
   "version": "2.1.1",
@@ -13,6 +13,7 @@
     "lint-fix": "next lint --fix"
   },
   "dependencies": {
+    "@date-io/jalaali": "^2.16.0",
     "@emotion/cache": "11.10.3",
     "@emotion/react": "11.10.4",
     "@emotion/server": "11.10.0",
@@ -21,10 +22,11 @@
     "@mui/lab": "5.0.0-alpha.99",
     "@mui/material": "5.10.5",
     "@mui/system": "5.10.5",
-    "@mui/x-date-pickers": "5.0.1",
+    "@mui/x-date-pickers": "^5.0.1",
     "@zalter/identity-js": "1.2.1",
     "chart.js": "3.9.1",
-    "date-fns": "2.29.3",
+    "date-fns": "^2.29.3",
+    "date-fns-jalali": "^2.29.3-0",
     "formik": "2.2.9",
     "next": "12.3.0",
     "nprogress": "0.2.0",

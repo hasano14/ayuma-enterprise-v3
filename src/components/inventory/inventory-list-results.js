@@ -20,11 +20,19 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { InventoryDialog } from "./inventory-dialog";
 
 export const InventoryListResults = ({ inventories, title, ...rest }) => {
   const [selectedInventoryIds, setSelectedInventoryIds] = useState([]);
+  const [inventoryTitle, setInventoryTitle] = useState("");
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleDialogClick = () => {
+    title === "Packagings" ? setInventoryTitle("Packagings") : setInventoryTitle("Raw-Materials");
+    console.log(inventoryTitle);
+  };
 
   const handleSelectAll = (event) => {
     let newSelectedInventoryIds;
@@ -67,80 +75,96 @@ export const InventoryListResults = ({ inventories, title, ...rest }) => {
   };
 
   return (
-    <Card {...rest}>
-      <CardHeader title={title} />
-      <Box sx={{ ml: 3, mb: 2 }}>
-        <Button color="primary" variant="contained" sx={{ mr: 1 }}>
-          Add {title}
-        </Button>
-      </Box>
-      <PerfectScrollbar>
-        <Box>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedInventoryIds.length === inventories.length}
-                    color="primary"
-                    indeterminate={
-                      selectedInventoryIds.length > 0 &&
-                      selectedInventoryIds.length < inventories.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Unit</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {inventories.slice(0, limit).map((inventory) => (
-                <TableRow
-                  hover
-                  key={inventory.id}
-                  selected={selectedInventoryIds.indexOf(inventory.id) !== -1}
-                >
+    <>
+      <Card {...rest}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            m: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          <CardHeader title={title} />
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{ mr: 1 }}
+            onClick={() => setOpenDialog(true)}
+          >
+            Add {title}
+          </Button>
+        </Box>
+        <PerfectScrollbar>
+          <Box sx={{ overflow: "auto" }}>
+            <Table>
+              <TableHead>
+                <TableRow>
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedInventoryIds.indexOf(inventory.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, inventory.id)}
-                      value="true"
+                      checked={selectedInventoryIds.length === inventories.length}
+                      color="primary"
+                      indeterminate={
+                        selectedInventoryIds.length > 0 &&
+                        selectedInventoryIds.length < inventories.length
+                      }
+                      onChange={handleSelectAll}
                     />
                   </TableCell>
-                  <TableCell>{inventory.name}</TableCell>
-                  <TableCell>{inventory.quantity}</TableCell>
-                  <TableCell>{inventory.unit}</TableCell>
-                  <TableCell>
-                    <Tooltip title="Edit">
-                      <IconButton aria-label="edit">
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <IconButton aria-label="delete">
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Quantity</TableCell>
+                  <TableCell>Unit</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={inventories.length}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
-    </Card>
+              </TableHead>
+              <TableBody>
+                {inventories.slice(0, limit).map((inventory) => (
+                  <TableRow
+                    hover
+                    key={inventory.id}
+                    selected={selectedInventoryIds.indexOf(inventory.id) !== -1}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={selectedInventoryIds.indexOf(inventory.id) !== -1}
+                        onChange={(event) => handleSelectOne(event, inventory.id)}
+                        value="true"
+                      />
+                    </TableCell>
+                    <TableCell>{inventory.name}</TableCell>
+                    <TableCell>{inventory.quantity}</TableCell>
+                    <TableCell>{inventory.unit}</TableCell>
+                    <TableCell>
+                      <Tooltip title="Edit">
+                        <IconButton aria-label="edit">
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton aria-label="delete">
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
+        </PerfectScrollbar>
+        <TablePagination
+          component="div"
+          count={inventories.length}
+          onPageChange={handlePageChange}
+          onRowsPerPageChange={handleLimitChange}
+          page={page}
+          rowsPerPage={limit}
+          rowsPerPageOptions={[5, 10, 25]}
+        />
+      </Card>
+      <InventoryDialog open={openDialog} onClose={() => setOpenDialog(false)} title={title} />
+    </>
   );
 };
 
