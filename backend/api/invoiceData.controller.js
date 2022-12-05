@@ -95,7 +95,6 @@ export default class InvoiceDataController {
     try {
       let id = req.params.id || {};
       let invoiceData = await InvoiceDataDAO.getInvoiceDataByID(id);
-
       if (!invoiceData) {
         res.status(400).json({ error: "Not Found" });
         return;

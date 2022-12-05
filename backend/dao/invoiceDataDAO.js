@@ -110,43 +110,47 @@ export default class InvoiceDataDAO {
     }
   }
 
-  // static async getInvoiceDataByID(id) {
-  //   try {
-  //     const pipeline = [
-  //       {
-  //         $match: {
-  //           _id: new ObjectId(id),
-  //         },
-  //       },
-  //       {
-  //         $lookup: {
-  //           from: "invoiceData",
-  //           let: {
-  //             id: "$_id",
-  //           },
-  //           pipeline: [
-  //             {
-  //               $match: {
-  //                 $expr: {
-  //                   $eq: ["$InvoiceNumber", "$$id"],
-  //                 },
-  //               },
-  //             },
-  //             { $sort: { $date: -1 } },
-  //           ],
-  //           as: "invoiceData",
-  //         },
-  //       },
-  //       {
-  //         $addFields: {
-  //           invoiceData: "$invoiceData",
-  //         },
-  //       },
-  //     ];
-  //     return await invoiceData.aggregate(pipeline).next();
-  //   } catch (e) {
-  //     console.error(`Something went wrong in the pipeline: ${e}`);
-  //     throw e;
-  //   }
-  // }
+  static async getInvoiceDataById(id) {
+    try {
+      const pipeline = [
+        {
+          $match: {
+            _id: new ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: "invoiceData",
+            let: {
+              id: "$_id",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$invoiceData_id", "$$id"],
+                  },
+                },
+              },
+              {
+                $sort: {
+                  date: -1,
+                },
+              },
+            ],
+            as: "invoiceData",
+          },
+        },
+        {
+          $addFields: {
+            invoiceData: "$invoiceData",
+          },
+        },
+      ];
+      return await invoiceData.aggregate(pipeline).next();
+    } catch (e) {
+      console.error(`Something went wrong in getInvoiceDataById: ${e}`);
+      throw e;
+    }
+  }
 }
