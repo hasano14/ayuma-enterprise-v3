@@ -22,7 +22,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SeverityPill } from "../severity-pill";
 import InvoiceDataService from "../../services/invoices";
-import { InvoiceDialog } from "./invoice-dialog";
+import { InvoiceDialogUpdate } from "./invoice-dialog-update";
 
 export const InvoiceListResults = () => {
   const [invoices, setInvoices] = useState([]);
@@ -178,7 +178,7 @@ export const InvoiceListResults = () => {
           rowsPerPageOptions={[5, 10, 25]}
         />
       </Card>
-      <InvoiceDialog
+      <InvoiceDialogUpdate
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         InvoiceNumber={invoiceId}

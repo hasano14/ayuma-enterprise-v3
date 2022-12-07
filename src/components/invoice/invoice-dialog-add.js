@@ -17,26 +17,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import InvoiceDataService from "../../services/invoices";
+import { textTransform } from "@mui/system";
 
-export const InvoiceDialog = (props) => {
-  const { onClose, open, InvoiceNumber, ...other } = props;
+export const InvoiceDialogAdd = (props) => {
+  const { onClose, open, ...other } = props;
   const [dateValue, setDateValue] = useState(null);
   const [invoice, setInvoice] = useState([]);
-
-  useEffect(() => {
-    retrieveInvoice(InvoiceNumber);
-  });
-
-  const retrieveInvoice = (props) => {
-    InvoiceDataService.get(props)
-      .then((response) => {
-        setInvoice(response.data);
-        console.log(response.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
 
   return (
     <Box
@@ -51,12 +37,12 @@ export const InvoiceDialog = (props) => {
             alignItems: "center",
             display: "flex",
             justifyContent: "space-between",
-            m: 1,
             flexWrap: "wrap",
+            mt: 1,
           }}
         >
-          <DialogTitle sx={{ fontSize: "h4.fontSize" }}>Invoice Details</DialogTitle>
-          <IconButton onClick={onClose}>
+          <DialogTitle sx={{ fontSize: "h4.fontSize" }}>Add Invoice</DialogTitle>
+          <IconButton onClick={onClose} sx={{ mr: 2 }}>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -67,7 +53,7 @@ export const InvoiceDialog = (props) => {
                 name="invoiceNumber"
                 label="Invoice Number"
                 hintText="Invoice Number"
-                sx={{ mt: 2, display: "block" }}
+                sx={{ display: "block" }}
                 fullWidth
                 defaultValue={invoice.InvoiceNumber}
               />
@@ -100,15 +86,9 @@ export const InvoiceDialog = (props) => {
                 }}
                 fullWidth
               />
-              {InvoiceNumber != null ? (
-                <Button type="submit" variant="contained" sx={{ my: 2 }}>
-                  Update
-                </Button>
-              ) : (
-                <Button type="submit" variant="contained" sx={{ my: 2 }}>
-                  Add
-                </Button>
-              )}
+              <Button type="submit" variant="contained" sx={{ my: 2 }}>
+                Add
+              </Button>
             </FormControl>
           </form>
         </DialogContent>

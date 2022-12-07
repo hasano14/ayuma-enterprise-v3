@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/jsx-max-props-per-line */
+import React, { useState, useEffect } from "react";
 
 import {
   Box,
@@ -13,10 +14,14 @@ import {
 import { Search as SearchIcon } from "../../icons/search";
 import { Upload as UploadIcon } from "../../icons/upload";
 import { Download as DownloadIcon } from "../../icons/download";
-import { InvoiceDialog } from "./invoice-dialog";
+import { InvoiceDialogAdd } from "./invoice-dialog-add";
 
 export const InvoiceListToolbar = (props) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [searchInvoice, setSearchInvoice] = useState("");
+
+  //Search Invoice From Database
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -59,6 +64,15 @@ export const InvoiceListToolbar = (props) => {
                         </SvgIcon>
                       </InputAdornment>
                     ),
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        onClick={() => setOpenDialog(true)}
+                        sx={{ input: { cursor: "pointer" } }}
+                      >
+                        <Button>Search</Button>
+                      </InputAdornment>
+                    ),
                   }}
                   placeholder="Search invoice"
                   variant="outlined"
@@ -68,7 +82,7 @@ export const InvoiceListToolbar = (props) => {
           </Card>
         </Box>
       </Box>
-      <InvoiceDialog open={openDialog} onClose={() => setOpenDialog(false)} />
+      <InvoiceDialogAdd open={openDialog} onClose={() => setOpenDialog(false)} />
     </>
   );
 };
