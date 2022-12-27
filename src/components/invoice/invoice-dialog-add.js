@@ -11,27 +11,112 @@ import {
   DialogTitle,
   DialogContent,
   FormControl,
+  Grid,
   TextField,
   IconButton,
   InputAdornment,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import InvoiceDataService from "../../services/invoices";
-import { textTransform } from "@mui/system";
 
 export const InvoiceDialogAdd = (props) => {
   const { onClose, open, ...other } = props;
   const [dateValue, setDateValue] = useState(null);
-  const [invoice, setInvoice] = useState([]);
+
+  //Handle Invoice Changes
+  const [invoiceStatus, setInvoiceStatus] = useState("");
+  const [invoiceId, setInvoiceId] = useState("");
+  const [invoiceName, setInvoiceName] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState(null);
+  const [invoiceAmount, setInvoiceAmount] = useState("");
+  const [invoice200g, setInvoice200g] = useState("");
+  const [invoice500g, setInvoice500g] = useState("");
+
+  const [checkEmptyInvoiceId, setCheckEmptyInvoiceId] = useState(false);
+  const [checkEmptyInvoiceName, setCheckEmptyInvoiceName] = useState(false);
+  const [checkEmptyInvoiceStatus, setCheckEmptyInvoiceStatus] = useState(false);
+  const [checkEmptyInvoiceDate, setCheckEmptyInvoiceDate] = useState(false);
+  const [checkEmptyTotalAmount, setCheckEmptyTotalAmount] = useState(false);
+
+  const handleStatusChange = (event) => {
+    setInvoiceStatus(event.target.value);
+  };
+
+  const handleDateChange = (newValue) => {
+    setDateValue(newValue);
+    setInvoiceDate(newValue);
+  };
+
+  //Handle Invoice Add
+  const addInvoice = () => {
+    var data = {
+      invoiceNumber: invoiceId,
+      invoiceName: invoiceName,
+      invoiceStatus: invoiceStatus,
+      invoice200g: invoice200g,
+      invoice500g: invoice500g,
+      invoiceAmount: invoiceAmount,
+      invoiceDate: invoiceDate,
+    };
+
+    //Check If Empty
+    invoiceId !== "" ? setCheckEmptyInvoiceId(false) : setCheckEmptyInvoiceId(true);
+    invoiceName !== "" ? setCheckEmptyInvoiceName(false) : setCheckEmptyInvoiceName(true);
+    invoiceAmount !== "" ? setCheckEmptyTotalAmount(false) : setCheckEmptyTotalAmount(true);
+    invoiceDate !== null ? setCheckEmptyInvoiceDate(false) : setCheckEmptyInvoiceDate(true);
+    invoiceStatus !== "" ? setCheckEmptyInvoiceStatus(false) : setCheckEmptyInvoiceStatus(true);
+
+    if (
+      invoiceId === "" ||
+      invoiceName === "" ||
+      invoiceStatus === "" ||
+      invoiceAmount === "" ||
+      invoiceDate === null
+    ) {
+      return;
+    }
+
+    InvoiceDataService.create(data)
+      .then((response) => {
+        console.log(response.data);
+        onClose("Received");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const handleClose = () => {
+    onClose();
+
+    //Reset All States
+    setInvoiceStatus("");
+    setInvoiceId("");
+    setInvoiceName("");
+    setInvoiceDate(null);
+    setInvoiceAmount("");
+    setInvoice200g("");
+    setInvoice500g("");
+
+    setCheckEmptyInvoiceId(false);
+    setCheckEmptyInvoiceName(false);
+    setCheckEmptyInvoiceStatus(false);
+    setCheckEmptyInvoiceDate(false);
+    setCheckEmptyTotalAmount(false);
+  };
 
   return (
     <Box
       sx={{
-        my: 2,
-        mx: 2,
+        my: 1,
+        mx: 1,
       }}
     >
-      <Dialog open={open} onClose={onClose} sx={{ alignment: "center" }}>
+      <Dialog open={open} onClose={handleClose} sx={{ alignment: "center" }}>
         <Box
           sx={{
             alignItems: "center",
@@ -42,20 +127,34 @@ export const InvoiceDialogAdd = (props) => {
           }}
         >
           <DialogTitle sx={{ fontSize: "h4.fontSize" }}>Add Invoice</DialogTitle>
-          <IconButton onClick={onClose} sx={{ mr: 2 }}>
+          <IconButton onClick={handleClose} sx={{ mr: 2 }}>
             <CloseIcon />
           </IconButton>
         </Box>
         <DialogContent sx={{ alignItems: "center", display: "flex" }}>
           <form action="/" method="POST">
-            <FormControl>
+            <FormControl fullWidth>
+              {checkEmptyInvoiceId ||
+              checkEmptyInvoiceName ||
+              checkEmptyInvoiceStatus ||
+              checkEmptyInvoiceDate ||
+              checkEmptyTotalAmount ? (
+                <Typography sx={{ color: "red", mb: 2 }} variant="body2">
+                  Please fill in all the required fields
+                </Typography>
+              ) : (
+                ""
+              )}
               <TextField
+                error={checkEmptyInvoiceId ? true : false}
+                id="invoiceNumber"
                 name="invoiceNumber"
                 label="Invoice Number"
                 hintText="Invoice Number"
                 sx={{ display: "block" }}
                 fullWidth
-                defaultValue={invoice.InvoiceNumber}
+                onChange={(e) => setInvoiceId(e.target.value)}
+                required
               />
               <TextField
                 name="Name"
@@ -63,30 +162,79 @@ export const InvoiceDialogAdd = (props) => {
                 label="Invoice Name"
                 sx={{ mt: 2, display: "block" }}
                 fullWidth
+                onChange={(e) => setInvoiceName(e.target.value)}
+                required
+                error={checkEmptyInvoiceName ? true : false}
               />
-              <Box sx={{ mt: 2, display: "block" }}>
+              <Grid sx={{ mt: 2, display: "block" }} container>
                 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ms}>
                   <DatePicker
                     label="Invoice Date"
                     value={dateValue}
-                    onChange={(value) => {
-                      setDateValue(value);
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
+                    onChange={handleDateChange}
+                    inputFormat="dd/MM/yyyy"
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        error={checkEmptyInvoiceDate ? true : false}
+                        fullWidth
+                        required
+                      />
+                    )}
                   />
                 </LocalizationProvider>
-              </Box>
+              </Grid>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <TextField
+                    name="invoice200g"
+                    hintText="Qty 200g"
+                    label="Qty 200g"
+                    sx={{ mt: 2, display: "block" }}
+                    onChange={(e) => setInvoice200g(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    name="invoice500g"
+                    hintText="Qty 500g"
+                    label="Qty 500g"
+                    sx={{ mt: 2, display: "block" }}
+                    onChange={(e) => setInvoice500g(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
               <TextField
                 name="invoiceAmount"
-                hintText="Invoice Amount (RM)"
-                label="Invoice Amount (RM)"
+                hintText="Total Amount (RM)"
+                label="Total Amount (RM)"
                 sx={{ mt: 2, display: "block" }}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">RM</InputAdornment>,
                 }}
                 fullWidth
+                onChange={(e) => setInvoiceAmount(e.target.value)}
+                required
+                error={checkEmptyTotalAmount ? true : false}
               />
-              <Button type="submit" variant="contained" sx={{ my: 2 }}>
+              <TextField
+                name="invoiceStatus"
+                hintText="Select Status"
+                label="Status"
+                select
+                onChange={handleStatusChange}
+                sx={{ mt: 2, display: "block" }}
+                fullWidth
+                required
+                error={checkEmptyInvoiceStatus ? true : false}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="Paid">Paid</MenuItem>
+                <MenuItem value="Pending">Pending</MenuItem>
+              </TextField>
+              <Button variant="contained" sx={{ my: 2 }} onClick={addInvoice}>
                 Add
               </Button>
             </FormControl>

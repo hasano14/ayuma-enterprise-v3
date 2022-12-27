@@ -15,6 +15,7 @@ import { Users as UsersIcon } from "../icons/users";
 import { XCircle as XCircleIcon } from "../icons/x-circle";
 import DescriptionIcon from "@mui/icons-material/Description";
 import InventoryIcon from "@mui/icons-material/Inventory";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
 
@@ -33,6 +34,11 @@ const items = [
     href: "/invoices",
     icon: <DescriptionIcon fontSize="small" />,
     title: "Invoices",
+  },
+  {
+    href: "/cashbill",
+    icon: <AttachMoneyIcon fontSize="small" />,
+    title: "Cash Bill",
   },
   {
     href: "/inventory",

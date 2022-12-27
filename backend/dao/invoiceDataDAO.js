@@ -50,20 +50,27 @@ export default class InvoiceDataDAO {
     }
   }
 
+  //Adding the Invoice Data
   static async addInvoiceData(
     invoiceNumber,
     invoiceName,
-    invoiceDate,
     invoiceStatus,
-    invoiceAddedDate
+    invoice200g,
+    invoice500g,
+    invoiceAmount,
+    invoiceAddedDate,
+    invoiceDate
   ) {
     try {
       const invoiceDataDoc = {
         InvoiceNumber: invoiceNumber,
         Name: invoiceName,
-        InvoiceDate: invoiceDate,
         Status: invoiceStatus,
+        InvoiceAmount: invoiceAmount,
+        Qty200g: invoice200g,
+        Qty500g: invoice500g,
         InvoiceAddedDate: invoiceAddedDate,
+        InvoiceDate: invoiceDate,
       };
       return await invoiceData.insertOne(invoiceDataDoc);
     } catch (e) {
@@ -76,8 +83,12 @@ export default class InvoiceDataDAO {
     invoiceID,
     invoiceName,
     invoiceNumber,
-    invoiceDate,
-    invoiceStatus
+    invoiceStatus,
+    invoice200g,
+    invoice500g,
+    invoiceAmount,
+    invoiceAddedDate,
+    invoiceDate
   ) {
     try {
       const updateResponse = await invoiceData.updateOne(
@@ -88,8 +99,12 @@ export default class InvoiceDataDAO {
           $set: {
             InvoiceNumber: invoiceNumber,
             Name: invoiceName,
-            InvoiceDate: invoiceDate,
             Status: invoiceStatus,
+            Qty200g: invoice200g,
+            Qty500g: invoice500g,
+            InvoiceAmount: invoiceAmount,
+            InvoiceAddedDate: invoiceAddedDate,
+            InvoiceDate: invoiceDate,
           },
         }
       );
@@ -100,9 +115,11 @@ export default class InvoiceDataDAO {
       return { error: e };
     }
   }
-  static async deleteInvoiceData(invoiceID) {
+
+  //Delete invoice data
+  static async deleteInvoiceData(id) {
     try {
-      const deleteInvoiceResponse = await invoiceData.deleteOne({ _id: ObjectId(invoiceID) });
+      const deleteInvoiceResponse = await invoiceData.deleteOne({ _id: ObjectId(id) });
       return deleteInvoiceResponse;
     } catch (e) {
       console.error(`Unable to delete invoice data: ${e}`);
@@ -110,46 +127,19 @@ export default class InvoiceDataDAO {
     }
   }
 
-  static async getInvoiceDataById(id) {
+  //Get Invoice Data by ID
+  static async getInvoiceDataByID(id) {
     try {
       const pipeline = [
         {
           $match: {
-            _id: new ObjectId(id),
-          },
-        },
-        {
-          $lookup: {
-            from: "invoiceData",
-            let: {
-              id: "$_id",
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ["$invoiceData_id", "$$id"],
-                  },
-                },
-              },
-              {
-                $sort: {
-                  date: -1,
-                },
-              },
-            ],
-            as: "invoiceData",
-          },
-        },
-        {
-          $addFields: {
-            invoiceData: "$invoiceData",
+            _id: ObjectId(id),
           },
         },
       ];
       return await invoiceData.aggregate(pipeline).next();
     } catch (e) {
-      console.error(`Something went wrong in getInvoiceDataById: ${e}`);
+      console.error(`Something went wrong in getInvoiceDataByID: ${e}`);
       throw e;
     }
   }

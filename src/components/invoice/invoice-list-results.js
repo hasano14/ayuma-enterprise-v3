@@ -22,15 +22,55 @@ import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SeverityPill } from "../severity-pill";
 import InvoiceDataService from "../../services/invoices";
-import { InvoiceDialogUpdate } from "./invoice-dialog-update";
 
-export const InvoiceListResults = () => {
+// import { InvoiceDialogView } from "./invoice-dialog-view";
+import { InvoiceDialogUpdate } from "./invoice-dialog-update";
+import { InvoiceDialogDelete } from "./invoice-dialog-delete";
+
+export const InvoiceListResults = (prop) => {
+  const { result, search } = prop;
+  const searchInvoice = result;
   const [invoices, setInvoices] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [invoiceResult, setInvoiceResult] = useState([]);
+
+  //Using result to display search results
+
+  useEffect(
+    (result) => {
+      if (result !== undefined) {
+        console.log("Result: " + searchInvoice);
+        InvoiceDataService.find(searchInvoice, "Invoice Number")
+          .then((response) => {
+            setInvoiceResult(response.data.invoiceData);
+            console.log(response.data);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+    },
+    [search]
+  );
+
+  //Check if result is undefined
+  const checkResult = () => {
+    if (result !== undefined) {
+      setResults(result);
+    }
+    return;
+  };
+
+  //Dialog
+  const [openDialogView, setOpenDialogView] = useState(false);
+  const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
+
+  //Selected Invoice ID
   const [selectedInvoiceIds, setSelectedInvoiceIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [invoiceId, setInvoiceId] = useState("");
+  const [invoiceIdDelete, setInvoiceIdDelete] = useState("");
 
   useEffect(() => {
     retrieveInvoices();
@@ -40,20 +80,43 @@ export const InvoiceListResults = () => {
     InvoiceDataService.getAll()
       .then((response) => {
         setInvoices(response.data.invoiceData);
+        console.log(response.data);
       })
       .catch((e) => {
         console.log(e);
       });
   };
 
-  const handleOpenDialog = (id) => {
-    setOpenDialog(true);
+  //Handle Update Invoice
+  const handleOpenDialogUpdate = (id) => {
     setInvoiceId(id);
+    setOpenDialogUpdate(true);
   };
 
+  //Handle Delete Invoice
+  const handleDeleteInvoice = (id) => {
+    setInvoiceIdDelete(id);
+    setOpenDialogDelete(true);
+  };
+
+  //Refresh page after update/delete
+  const handlePageUpdate = () => {
+    if (openDialogUpdate === true) {
+      setInvoiceId(null);
+      setOpenDialogUpdate(false);
+    }
+    if (openDialogDelete === true) {
+      setOpenDialogDelete(false);
+    }
+    if (openDialogView === true) {
+      setOpenDialogView(false);
+    }
+    retrieveInvoices();
+  };
+
+  //Handle Select All Invoice
   const handleSelectAll = (event) => {
     let newSelectedInvoiceIds;
-
     if (event.target.checked) {
       newSelectedInvoiceIds = invoices.map((invoice) => invoice._id);
     } else {
@@ -63,6 +126,7 @@ export const InvoiceListResults = () => {
     setSelectedInvoiceIds(newSelectedInvoiceIds);
   };
 
+  //Handle Select One Invoice
   const handleSelectOne = (event, id) => {
     const selectedIndex = selectedInvoiceIds.indexOf(id);
     let newSelectedInvoiceIds = [];
@@ -91,6 +155,19 @@ export const InvoiceListResults = () => {
     setPage(newPage);
   };
 
+  //Convert from ISO to dd/MM/yyyy
+  const convertDate = (date) => {
+    const newDate = new Date(date);
+    const day = newDate.getDate();
+    const month = newDate.getMonth() + 1;
+    const year = newDate.getFullYear();
+
+    if (day < 10) day = "0" + day;
+    if (month < 10) month = "0" + month;
+
+    return day + "/" + month + "/" + year;
+  };
+
   return (
     <>
       <Card>
@@ -99,7 +176,7 @@ export const InvoiceListResults = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell padding="checkbox">
+                  {/* <TableCell padding="checkbox">
                     <Checkbox
                       checked={selectedInvoiceIds.length === invoices.length}
                       color="primary"
@@ -108,12 +185,15 @@ export const InvoiceListResults = () => {
                       }
                       onChange={handleSelectAll}
                     />
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>Invoice Ref</TableCell>
-                  <TableCell>Name</TableCell>
                   <TableCell>Date</TableCell>
-                  <TableCell>Status</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Qty (200g)</TableCell>
+                  <TableCell>Qty (500g)</TableCell>
+                  <TableCell>Total (RM)</TableCell>
                   <TableCell>Actions</TableCell>
+                  <TableCell>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -123,17 +203,52 @@ export const InvoiceListResults = () => {
                     key={invoice._id}
                     selected={selectedInvoiceIds.indexOf(invoice._id) !== -1}
                   >
-                    <TableCell padding="checkbox">
+                    {/* <TableCell padding="checkbox">
                       <Checkbox
                         checked={selectedInvoiceIds.indexOf(invoice._id) !== -1}
                         onChange={(event) => handleSelectOne(event, invoice._id)}
                         value="true"
                       />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>{invoice.InvoiceNumber}</TableCell>
+                    <TableCell>{convertDate(invoice.InvoiceDate)}</TableCell>
                     <TableCell>{invoice.Name}</TableCell>
-                    <TableCell>{invoice.InvoiceDate}</TableCell>
-                    {/* <TableCell>{format(invoice.InvoiceAddedDate, "dd/MM/yyyy")}</TableCell> */}
+                    <TableCell>{invoice.Qty200g}</TableCell>
+                    <TableCell>{invoice.Qty500g}</TableCell>
+                    <TableCell>{invoice.InvoiceAmount}</TableCell>
+                    {/* Actions */}
+                    <TableCell>
+                      {/* View Invoice
+                      <Tooltip title="View">
+                        <IconButton
+                          aria-label="view"
+                          onClick={() => handleOpenDialogView(invoice._id)}
+                        >
+                          <VisibilityIcon />
+                        </IconButton>
+                      </Tooltip> */}
+                      {/* Edit Invoice */}
+                      <Tooltip title="Edit">
+                        <IconButton
+                          aria-label="edit"
+                          onClick={() => handleOpenDialogUpdate(invoice.InvoiceNumber)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+
+                      {/* Delete Invoice */}
+                      <Tooltip title="Delete">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDeleteInvoice(invoice._id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+
+                    {/* Status */}
                     <TableCell>
                       <SeverityPill
                         color={
@@ -144,23 +259,6 @@ export const InvoiceListResults = () => {
                       >
                         {invoice.Status}
                       </SeverityPill>
-                    </TableCell>
-                    <TableCell>
-                      <Tooltip title="View">
-                        <IconButton aria-label="view" onClick={() => handleOpenDialog(invoice._id)}>
-                          <VisibilityIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Edit">
-                        <IconButton aria-label="edit">
-                          <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <IconButton aria-label="delete">
-                          <DeleteIcon />
-                        </IconButton>
-                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -177,12 +275,18 @@ export const InvoiceListResults = () => {
           rowsPerPage={limit}
           rowsPerPageOptions={[5, 10, 25]}
         />
+        <InvoiceDialogUpdate
+          open={openDialogUpdate}
+          onClose={() => handlePageUpdate()}
+          id={invoiceId}
+        />
+
+        <InvoiceDialogDelete
+          open={openDialogDelete}
+          onClose={() => handlePageUpdate()}
+          id={invoiceIdDelete}
+        />
       </Card>
-      <InvoiceDialogUpdate
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        InvoiceNumber={invoiceId}
-      />
     </>
   );
 };

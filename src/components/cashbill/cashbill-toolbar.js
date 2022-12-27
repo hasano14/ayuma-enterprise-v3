@@ -14,31 +14,21 @@ import {
 import { Search as SearchIcon } from "../../icons/search";
 import { Upload as UploadIcon } from "../../icons/upload";
 import { Download as DownloadIcon } from "../../icons/download";
-import { InvoiceDialogAdd } from "./invoice-dialog-add";
-import InvoiceDataService from "../../services/invoices";
-import { InvoiceDialogSearch } from "./invoice-dialog-search";
+import { CashbillDialogAdd } from "./cashbill-dialog-add";
 import AddIcon from "@mui/icons-material/Add";
 
-export const InvoiceListToolbar = (props) => {
+export const CashBillToolbar = (props) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [openDialogSearch, setOpenDialogSearch] = useState(false);
-  const [searchInvoiceNumber, setSearchInvoiceNumber] = useState(null);
+  const [searchCashbill, setSearchCashbill] = useState("");
 
-  const onChangeSearchInvoiceNumber = (e) => {
-    const searchInvoiceNumber = e.target.value;
-    setSearchInvoiceNumber(searchInvoiceNumber);
-  };
+  //Search Cashbill From Database
+  useEffect(() => {}, []);
 
-  const handlePageUpdate = (result, clearSearch) => {
+  const handlePageUpdate = (result) => {
     setOpenDialog(false);
     if (result === "Received") {
       window.location.reload();
     }
-  };
-
-  const handlePageSearchClose = () => {
-    setOpenDialogSearch(false);
-    setSearchInvoiceNumber("");
   };
 
   return (
@@ -54,7 +44,7 @@ export const InvoiceListToolbar = (props) => {
           }}
         >
           <Typography sx={{ m: 1 }} variant="h4">
-            Invoices
+            Cash Bill
           </Typography>
           <Box sx={{ m: 1 }}>
             {/* <Button startIcon={<UploadIcon fontSize="small" />} sx={{ mr: 1 }}>
@@ -69,7 +59,7 @@ export const InvoiceListToolbar = (props) => {
               variant="contained"
               onClick={() => setOpenDialog(true)}
             >
-              Add Invoice
+              Add Cash Bill
             </Button>
           </Box>
         </Box>
@@ -78,8 +68,6 @@ export const InvoiceListToolbar = (props) => {
             <CardContent>
               <Box sx={{ maxWidth: 500 }}>
                 <TextField
-                  value={searchInvoiceNumber}
-                  onChange={onChangeSearchInvoiceNumber}
                   fullWidth
                   InputProps={{
                     startAdornment: (
@@ -90,20 +78,16 @@ export const InvoiceListToolbar = (props) => {
                       </InputAdornment>
                     ),
                     endAdornment: (
-                      <>
-                        <InputAdornment
-                          position="end"
-                          sx={{ input: { cursor: "pointer" } }}
-                          onClick={() => {
-                            setOpenDialogSearch(true);
-                          }}
-                        >
-                          <Button>Search</Button>
-                        </InputAdornment>
-                      </>
+                      <InputAdornment
+                        position="end"
+                        onClick={() => setOpenDialog(true)}
+                        sx={{ input: { cursor: "pointer" } }}
+                      >
+                        <Button>Search</Button>
+                      </InputAdornment>
                     ),
                   }}
-                  placeholder="Search by Invoice Number"
+                  placeholder="Search Cashbill"
                   variant="outlined"
                 />
               </Box>
@@ -111,12 +95,7 @@ export const InvoiceListToolbar = (props) => {
           </Card>
         </Box>
       </Box>
-      <InvoiceDialogAdd open={openDialog} onClose={(result) => handlePageUpdate(result)} />
-      <InvoiceDialogSearch
-        open={openDialogSearch}
-        onClose={() => handlePageSearchClose()}
-        search={searchInvoiceNumber}
-      />
+      <CashbillDialogAdd open={openDialog} onClose={(result) => handlePageUpdate(result)} />
     </>
   );
 };

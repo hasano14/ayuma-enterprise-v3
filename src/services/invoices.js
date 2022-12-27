@@ -2,31 +2,35 @@ import http from "../http-common";
 
 class InvoiceDataService {
   getAll() {
-    return http.get("/invoiceData");
+    return http.get("/InvoiceData");
   }
 
   get(id) {
-    return http.get(`/invoiceData/${id}`);
+    return http.get(`/InvoiceData/${id}`);
   }
 
   create(data) {
-    return http.post("/invoiceData", data);
+    return http.post("/InvoiceData", data);
   }
 
-  update(id, data) {
-    return http.put(`/invoiceData/${id}`, data);
+  find(query, by = "InvoiceNumber", order = "asc") {
+    return http.get(`/InvoiceData?${by}=${query}&_sort=${by}&_order=${order}`);
+  }
+
+  update(data) {
+    return http.put(`/InvoiceData`, data);
   }
 
   delete(id) {
-    return http.delete(`/invoiceData/${id}`);
+    return http.delete(`/InvoiceData?id=${id}`);
   }
 
   deleteAll() {
-    return http.delete(`/invoiceData`);
+    return http.delete(`/InvoiceData`);
   }
 
   findByTitle(title) {
-    return http.get(`/invoiceData?name=${title}`);
+    return http.get(`/InvoiceData?name=${title}`);
   }
 }
 

@@ -32,20 +32,27 @@ export default class InvoiceDataController {
     res.json(response);
   }
 
+  //Adding the Invoice Data
   static async apiPostInvoiceData(req, res, next) {
     try {
       const invoiceNumber = req.body.invoiceNumber;
       const invoiceName = req.body.invoiceName;
-      const invoiceDate = req.body.invoiceDate;
       const invoiceStatus = req.body.invoiceStatus;
+      const invoice200g = req.body.invoice200g;
+      const invoice500g = req.body.invoice500g;
+      const invoiceAmount = req.body.invoiceAmount;
       const invoiceAddedDate = new Date();
+      const invoiceDate = req.body.invoiceDate;
 
       const invoiceDataResponse = await InvoiceDataDAO.addInvoiceData(
         invoiceNumber,
         invoiceName,
-        invoiceDate,
         invoiceStatus,
-        invoiceAddedDate
+        invoice200g,
+        invoice500g,
+        invoiceAmount,
+        invoiceAddedDate,
+        invoiceDate
       );
       res.json({ status: "success" });
     } catch {
@@ -80,9 +87,10 @@ export default class InvoiceDataController {
     }
   }
 
+  //Deleting the Invoice Data
   static async apiDeleteInvoiceData(req, res, next) {
     try {
-      const invoiceId = req.query.invoiceID;
+      const invoiceId = req.query.id;
       console.log(invoiceId);
       const invoiceDataResponse = await InvoiceDataDAO.deleteInvoiceData(invoiceId);
       res.json({ status: "success" });
@@ -91,6 +99,7 @@ export default class InvoiceDataController {
     }
   }
 
+  //Getting the Invoice Data by ID
   static async apiGetInvoiceDataById(req, res, next) {
     try {
       let id = req.params.id || {};
