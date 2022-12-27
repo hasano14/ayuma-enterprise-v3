@@ -45,21 +45,21 @@ const items = [
     icon: <InventoryIcon fontSize="small" />,
     title: "Inventory",
   },
-  {
-    href: "/account",
-    icon: <UserIcon fontSize="small" />,
-    title: "Account",
-  },
-  {
-    href: "/settings",
-    icon: <CogIcon fontSize="small" />,
-    title: "Settings",
-  },
-  {
-    href: "/login",
-    icon: <LockIcon fontSize="small" />,
-    title: "Login",
-  },
+  // {
+  //   href: "/account",
+  //   icon: <UserIcon fontSize="small" />,
+  //   title: "Account",
+  // },
+  // {
+  //   href: "/settings",
+  //   icon: <CogIcon fontSize="small" />,
+  //   title: "Settings",
+  // },
+  // {
+  //   href: "/login",
+  //   icon: <LockIcon fontSize="small" />,
+  //   title: "Login",
+  // },
   // {
   //   href: "/register",
   //   icon: <UserAddIcon fontSize="small" />,
