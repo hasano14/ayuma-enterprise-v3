@@ -7,11 +7,10 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "start": "next start -p $PORT",
     "export": "next export",
     "lint": "next lint",
-    "lint-fix": "next lint --fix",
-    "start": "node backend/server.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install npm && run build"
+    "lint-fix": "next lint --fix"
   },
   "dependencies": {
     "@date-io/jalaali": "^2.16.0",
@@ -45,8 +44,5 @@
   "devDependencies": {
     "eslint": "8.23.1",
     "eslint-config-next": "12.3.0"
-  },
-  "engines": {
-    "node": "10.16.0"
   }
 }
