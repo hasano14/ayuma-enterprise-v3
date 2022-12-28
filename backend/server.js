@@ -10,6 +10,4 @@ app.use(express.json());
 app.use("/api/v1/invoiceData", allData);
 app.use("*", (req, res) => res.status(404).json({ error: "Data Not Found" }));
 
-const port = process.env.PORT || 5000;
-app.listen(port);
 export default app;
