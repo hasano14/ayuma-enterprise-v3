@@ -59,7 +59,7 @@ export const InvoiceDialogUpdate = (props) => {
         console.log(response.data.invoiceData);
       })
       .catch((e) => {
-        console.log("Error");
+        console.log("Invoice Not Fetch");
       });
   };
 

@@ -13,7 +13,7 @@ router
   .delete(InvoiceDataController.apiDeleteInvoiceData);
 
 router
-  .route("CashbillData")
+  .route("/CashbillData")
   .get(CashbillDataController.apiGetCashbillData)
   .post(CashbillDataController.apiPostCashbillData);
 

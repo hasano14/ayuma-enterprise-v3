@@ -21,13 +21,13 @@ const Page = () => (
     >
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Grid item xl={12} lg={8} sm={12} xs={12}>
+          <Grid item xl={12} lg={12} sm={12} xs={12}>
             <TotalCustomers />
           </Grid>
-          <Grid item lg={8} md={12} xl={6} xs={12}>
+          <Grid item xl={12} lg={12} md={12} xs={12}>
             <Sales />
           </Grid>
-          <Grid item lg={8} md={12} xl={6} xs={12}>
+          <Grid item xl={12} lg={12} md={12}  xs={12}>
             <LatestInvoice />
           </Grid>
         </Grid>
